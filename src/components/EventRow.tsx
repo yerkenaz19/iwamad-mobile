@@ -1,25 +1,20 @@
-import { useState } from 'react'
+
 import { Pressable, Text, StyleSheet, View } from 'react-native'
-import { CampusEvent } from '../data/events'
+import type { CampusEvent } from '../data/events'
 
 type EventRowProps = {
   event: CampusEvent
+  isSaved: boolean
   onPress: () => void
   onLongPress: () => void
 }
 
 export default function EventRow({
   event,
+  isSaved,
   onPress,
   onLongPress,
 }: EventRowProps) {
-  const [saved, setSaved] = useState(false)
-
-  const handleLongPress = () => {
-    setSaved(true)
-    onLongPress()
-  }
-
   return (
     <Pressable
       style={({ pressed }) => [
@@ -27,14 +22,14 @@ export default function EventRow({
         pressed && styles.pressed,
       ]}
       onPress={onPress}
-      onLongPress={handleLongPress}
+      onLongPress={onLongPress}
     >
       <View>
         <Text style={styles.title}>{event.title}</Text>
         <Text style={styles.details}>
           {event.date} · {event.place}
         </Text>
-        {saved && <Text style={styles.saved}>★ Saved</Text>}
+        {isSaved && <Text style={styles.saved}>★ Saved</Text>}
       </View>
     </Pressable>
   )
@@ -42,6 +37,8 @@ export default function EventRow({
 
 const styles = StyleSheet.create({
   row: {
+    minHeight: 44,
+    justifyContent: 'center',
     padding: 16,
     marginHorizontal: 16,
     marginVertical: 6,

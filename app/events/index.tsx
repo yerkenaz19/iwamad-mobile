@@ -1,3 +1,4 @@
+
 import { useState } from 'react'
 import {
   FlatList,
@@ -12,32 +13,48 @@ import EventRow from '../../src/components/EventRow'
 
 export default function EventsScreen() {
   const [search, setSearch] = useState('')
+  const [savedIds, setSavedIds] = useState<number[]>([])
 
   const filteredEvents = events.filter((event) =>
     event.title.toLowerCase().includes(search.toLowerCase())
   )
 
+  const toggleSaved = (id: number) => {
+    setSavedIds((current) =>
+      current.includes(id)
+        ? current.filter((savedId) => savedId !== id)
+        : [...current, id]
+    )
+  }
+
   return (
     <View style={styles.container}>
       <TextInput
         style={styles.search}
-        placeholder="Search events..."
+        placeholder="Search events"
         value={search}
         onChangeText={setSearch}
       />
+
+      <Text style={styles.hint}>
+        Long-press an event to save it. Saved: {'{'}
+        {savedIds.join(', ')}
+        {'}'}
+      </Text>
 
       <FlatList
         data={filteredEvents}
         renderItem={({ item }) => (
           <EventRow
             event={item}
+            isSaved={savedIds.includes(item.id)}
             onPress={() => router.push(`/events/${item.id}`)}
-            onLongPress={() => console.log('Saved:', item.id)}
+            onLongPress={() => toggleSaved(item.id)}
           />
         )}
         keyExtractor={(e) => String(e.id)}
         ListEmptyComponent={() => (
-          <Text style={styles.empty}>No events found</Text>
+          <Text style={styles.empty}>No events match</Text>
         )}
       />
     </View>
@@ -55,6 +72,11 @@ const styles = StyleSheet.create({
     margin: 16,
     borderRadius: 8,
     fontSize: 16,
+  },
+  hint: {
+    marginHorizontal: 16,
+    marginBottom: 10,
+    color: 'gray',
   },
   empty: {
     textAlign: 'center',
