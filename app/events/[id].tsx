@@ -1,11 +1,34 @@
-import { View, Text, StyleSheet } from 'react-native'
+
+import { View, Text, StyleSheet, ActivityIndicator, Pressable } from 'react-native'
 import { useLocalSearchParams, Stack } from 'expo-router'
-import { events } from '../../src/data/events'
+import { useEvents } from '../../src/hooks/useEvents'
 
 export default function EventDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>()
+  const { data, isPending, isError, error, refetch } = useEvents()
 
-  const event = events.find((e) => e.id === Number(id))
+  if (isPending) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" />
+        <Text>Loading events</Text>
+      </View>
+    )
+  }
+
+  if (isError) {
+    return (
+      <View style={styles.container}>
+        <Text>Could not load events</Text>
+        <Text>{error.message}</Text>
+        <Pressable style={styles.retry} onPress={() => refetch()}>
+          <Text style={styles.retryText}>Try again</Text>
+        </Pressable>
+      </View>
+    )
+  }
+
+  const event = data.find((e) => e.id === Number(id))
 
   if (!event) {
     return (
@@ -36,6 +59,18 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
+    fontWeight: 'bold',
+  },
+  retry: {
+    minHeight: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    backgroundColor: '#2563eb',
+    borderRadius: 8,
+  },
+  retryText: {
+    color: 'white',
     fontWeight: 'bold',
   },
 })
