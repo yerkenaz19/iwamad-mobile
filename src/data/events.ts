@@ -1,0 +1,8 @@
+export type CampusEvent = {
+  id: number
+  title: string
+  date: string
+  place: string
+  seats: number
+}
+
