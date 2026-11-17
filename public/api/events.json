@@ -1,11 +1,11 @@
 [
   {
-    "id": 1,
-    "title": "React Study Night",
-    "date": "2026-10-22",
-    "place": "Room 302",
-    "seats": 20
-  },
+  "id": 1,
+  "title": "React Study Night",
+  "date": "2026-01-01",
+  "place": "Room 302",
+  "seats": 20
+},
   {
     "id": 2,
     "title": "TypeScript Workshop",

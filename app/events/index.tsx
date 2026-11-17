@@ -11,12 +11,12 @@ import {
 } from 'react-native'
 import { router } from 'expo-router'
 import { useEvents } from '../../src/hooks/useEvents'
-import { CampusEvent } from '../../src/data/events'
+import { useSavedIds } from '../../src/hooks/useSavedIds'
 import EventRow from '../../src/components/EventRow'
 
 export default function EventsScreen() {
   const [search, setSearch] = useState('')
-  const [savedIds, setSavedIds] = useState<number[]>([])
+  const { savedIds, toggleSaved } = useSavedIds()
 
   const {
     data,
@@ -30,14 +30,6 @@ export default function EventsScreen() {
   const filteredEvents = (data ?? []).filter((event) =>
     event.title.toLowerCase().includes(search.toLowerCase())
   )
-
-  const toggleSaved = (id: number) => {
-    setSavedIds((current) =>
-      current.includes(id)
-        ? current.filter((savedId) => savedId !== id)
-        : [...current, id]
-    )
-  }
 
   if (isPending) {
     return (
