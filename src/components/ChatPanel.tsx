@@ -1,5 +1,5 @@
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 import { useChat } from '../hooks/useChat'
 import { sendMessage } from '../lib/chat'
+import { askNotificationPermission } from '../lib/notifications'
 
 type ChatPanelProps = {
   eventId: number
@@ -21,6 +22,10 @@ export default function ChatPanel({
 }: ChatPanelProps) {
   const { messages, status } = useChat(eventId, eventTitle)
   const [text, setText] = useState('')
+
+  useEffect(() => {
+    askNotificationPermission()
+  }, [])
 
   const trimmedText = text.trim()
 
